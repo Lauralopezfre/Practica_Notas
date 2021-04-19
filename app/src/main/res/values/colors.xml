@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="rojoanaranjado">#AC3D22</color>
+    <color name="anaranjadointermedio">#C8634B</color>
+    <color name="anaranjadocrema">#D18E7F</color>
+    <color name="azulbajito">#7FBBD1</color>
+    <color name="azulintermedio">#4D95AF</color>
+    <color name="azulfuerte">#235F75</color>
+    <color name="negro">#FF000000</color>
+    <color name="blanco">#FFFFFFFF</color>
+</resources>
