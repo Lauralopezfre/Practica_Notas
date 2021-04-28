@@ -7,11 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.*
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     var notas = ArrayList<Nota>()
@@ -104,12 +103,39 @@ class AdaptadorNotas: BaseAdapter{
         var vista = inflator.inflate(R.layout.nota_layout, null)
         var nota = notas[position]
 
-        var titulo: TextView = vista.findViewById(R.id.tv_titulo_det);
+        var titulo: TextView = vista.findViewById(R.id.tv_titulo_det)
         var contenido: TextView = vista.findViewById(R.id.tv_contenido)
+        var btn_borrar: Button = vista.findViewById(R.id.btn_borrar)
 
         titulo.text = nota.titulo
-        titulo.text = nota.contenido
+        contenido.text = nota.contenido
+        btn_borrar.setOnClickListener {
+            eliminar(nota.titulo)
+            notas.remove(nota)
+            this.notifyDataSetChanged()
+        }
+
         return vista
+    }
+
+    private fun eliminar(titulo: String){
+        if(titulo == ""){
+            Toast.makeText(context, "Error: titulo vacio", Toast.LENGTH_SHORT).show()
+        }else{
+            try{
+                val archivo = File(ubicacion(), titulo + ".txt")
+                archivo.delete()
+                Toast.makeText(context, "Se elimino el archivo", Toast.LENGTH_SHORT).show()
+            }catch (e: Exception){
+                Toast.makeText(context, "Error al eliminar el archivo",  Toast. LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun ubicacion(): String{
+        val carpeta = File(context?.getExternalFilesDir(null), "notas")
+        if(!carpeta.exists()) carpeta.mkdir()
+        return carpeta.absolutePath
     }
 
     override fun getItem(position: Int): Any {
