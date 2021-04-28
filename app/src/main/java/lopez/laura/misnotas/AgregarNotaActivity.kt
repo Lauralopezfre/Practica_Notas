@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import org.w3c.dom.Text
+import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
 import java.util.jar.Manifest
@@ -26,11 +27,12 @@ class AgregarNotaActivity : AppCompatActivity() {
 
     fun guardar_notas(){
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+
         {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),23)
 
         }else{
-
+            guardar()
         }
     }
 
@@ -39,7 +41,7 @@ class AgregarNotaActivity : AppCompatActivity() {
         when(requestCode){
             235 -> {
                 if((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
-
+                    guardar()
                 }else{
                     Toast.makeText(this, "Error: permisos denegados", Toast.LENGTH_SHORT).show()
                 }
@@ -47,7 +49,7 @@ class AgregarNotaActivity : AppCompatActivity() {
         }
     }
 
-    fun guadar(){
+    fun guardar(){
         var et_titulo: TextView = findViewById(R.id.et_titulo) as TextView
         var et_contenido: TextView = findViewById(R.id.et_contenido) as TextView
         var titulo = et_titulo.text.toString()
@@ -57,10 +59,10 @@ class AgregarNotaActivity : AppCompatActivity() {
             Toast.makeText(this, "Error: campos vacios", Toast.LENGTH_SHORT).show()
         }else{
             try{
-                //val archivo = File(ubicacion(), titulo + ".txt")
-                //val fos = FileOutputStream(archivo)
-                //fos.write(cuerpo.toByteArray())
-                //fos.close()
+                val archivo = File(ubicacion(), titulo + ".txt")
+                val fos = FileOutputStream(archivo)
+                fos.write(cuerpo.toByteArray())
+                fos.close()
                 Toast.makeText(
                         this,
                         "Se guardo el archivo en la carpeta publica",
@@ -71,5 +73,14 @@ class AgregarNotaActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error, no se guardo el archivo", Toast.LENGTH_SHORT).show()
             }
         }
+        finish()
     }
+
+    private fun ubicacion(): String{
+        val carpeta = File(getExternalFilesDir(null), "notas")
+        if(!carpeta.exists()) carpeta.mkdir()
+        return carpeta.absolutePath
+    }
+
+
 }
